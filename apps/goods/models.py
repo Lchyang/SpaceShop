@@ -34,7 +34,8 @@ class GoodsCategorys(models.Model):
 
 class Goods(models.Model):
     """商品"""
-    category = models.ForeignKey(GoodsCategorys, default='', on_delete=models.CASCADE, related_name='goods', verbose_name="商品类别")
+    category = models.ForeignKey(GoodsCategorys, default='', on_delete=models.CASCADE, related_name='goods',
+                                 verbose_name="商品类别")
     name = models.CharField(max_length=60, verbose_name="商品名称")
     goods_sn = models.CharField(max_length=50, verbose_name="商品唯一货号")
     market_price = models.FloatField(default=0, verbose_name="商品市场价格")

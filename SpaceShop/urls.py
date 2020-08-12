@@ -15,20 +15,33 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from django.conf.urls import url, include
+from django.conf.urls import include, url
 from django.conf import settings
-from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
 
-API_TITLE = 'Pastebin API'
-API_DESCRIPTION = 'A Web API for SpaceShop'
-schema_view = get_schema_view(title=API_TITLE)
+# 配置生成文档
+schema_view = get_schema_view(
+    title="SpaceShop",
+    description="API for all goods",
+    version="1.0.0",
+)
 
-urlpatterns = [
-                  path('', include('goods.urls')),
-                  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-                  path('admin/', admin.site.urls),
-                  path('docs/', TemplateView.as_view(template_name="index.html")),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL)
+sub_urlpatterns = [
+    path('', include('goods.urls'), name='goods'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('admin/', admin.site.urls),
+    # rest_framework 自带docs
+    re_path(r'^docs/', include_docs_urls(title='SpaceShop')),
+    # swagger UI 暂时不用
+    path('openapi-schema', schema_view, name='openapi-schema'),
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
+]
+
+# 静态文件配置，debug=True时才能生效
+urlpatterns = sub_urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
