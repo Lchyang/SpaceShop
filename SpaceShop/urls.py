@@ -21,17 +21,14 @@ from django.conf.urls.static import static
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
-from apps.goods.views import GoodsView
 
 API_TITLE = 'Pastebin API'
 API_DESCRIPTION = 'A Web API for SpaceShop'
 schema_view = get_schema_view(title=API_TITLE)
 
 urlpatterns = [
+                  path('', include('goods.urls')),
+                  path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
                   path('admin/', admin.site.urls),
-                  path('goods/', GoodsView.as_view()),
-                  re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-                  url(r'^schema/$', schema_view),
-                  url(r'^docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION)),
-                  url('openapi/', TemplateView.as_view(template_name="index.html")),
+                  path('docs/', TemplateView.as_view(template_name="index.html")),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL)

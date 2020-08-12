@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
-  title: 'SpaceShop'
-  version: '0.01'
+  title: ''
+  version: ''
 paths:
   /goods/:
     get:
@@ -60,4 +60,66 @@ paths:
                   - name
                   - goods_sn
                   - modified_time
+          description: ''
+  /goods/{id}/:
+    get:
+      operationId: retrieveGoods
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: "A unique integer value identifying this \u5546\u54C1."
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  name:
+                    type: string
+                    maxLength: 60
+                  goods_sn:
+                    type: string
+                    maxLength: 50
+                  market_price:
+                    type: number
+                  sales_price:
+                    type: number
+                  desc:
+                    type: string
+                    nullable: true
+                  goods_front_image:
+                    type: string
+                    format: binary
+                    nullable: true
+                  ship_free:
+                    type: boolean
+                  goods_desc:
+                    type: string
+                  sold_nums:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                  stored_nums:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: -2147483648
+                  created_time:
+                    type: string
+                    format: date-time
+                  modified_time:
+                    type: string
+                    format: date-time
+                  category:
+                    type: integer
+                required:
+                - name
+                - goods_sn
+                - modified_time
           description: ''
