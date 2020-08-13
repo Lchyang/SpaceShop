@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'DjangoUeditor',
     'rest_framework',
+    'drf_yasg',
     'xadmin',
     'crispy_forms',
     'goods.apps.GoodsConfig'
@@ -132,6 +133,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
-    # 生成文档配置
-    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.AutoSchema",
 }

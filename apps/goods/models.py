@@ -14,7 +14,8 @@ class GoodCategories(models.Model):
     code = models.CharField(default='', max_length=30, verbose_name='商品类别编号')
     desc = models.TextField(default='', verbose_name="类别描述", help_text="类别描述")
     # 存在三级类别，当此字段为空的时候为父类别，有字段的时候为子类别，related_name 父类查询子类时使用
-    parent_category = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE, related_name='sub_cat',
+    parent_category = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE,
+                                        related_name='sub_cat',
                                         verbose_name="父类别")
     category_type = models.IntegerField(choices=CATEGORY_CHOICE, verbose_name="商品类目级别")
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
@@ -41,7 +42,8 @@ class Goods(models.Model):
     market_price = models.FloatField(default=0, verbose_name="商品市场价格")
     sales_price = models.FloatField(default=0, verbose_name="商品促销价格")
     desc = models.TextField(null=True, blank=True, verbose_name="商品描述")
-    goods_front_image = models.ImageField(upload_to="goods/images/cover", null=True, blank=True, verbose_name="封面图")
+    goods_front_image = models.ImageField(upload_to="goods/images/cover", null=True, blank=True,
+                                          verbose_name="封面图")
     ship_free = models.BooleanField(default=True, verbose_name="是否承担运费")
     # django富文本编辑
     goods_desc = UEditorField(verbose_name=u"内容", imagePath="goods/images/", width=1000, height=300,
