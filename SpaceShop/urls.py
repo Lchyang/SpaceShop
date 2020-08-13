@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, re_path
 from django.conf.urls import include, url
 from django.conf import settings
@@ -21,6 +20,7 @@ from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
+import xadmin
 
 # 配置生成文档
 schema_view = get_schema_view(
@@ -32,7 +32,7 @@ schema_view = get_schema_view(
 sub_urlpatterns = [
     path('', include('goods.urls'), name='goods'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('admin/', admin.site.urls),
+    path('xadmin/', xadmin.site.urls),
     # rest_framework 自带docs
     re_path(r'^docs/', include_docs_urls(title='SpaceShop')),
     # swagger UI 暂时不用

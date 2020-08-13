@@ -3,7 +3,7 @@ from django.db import models
 from DjangoUeditor.models import UEditorField
 
 
-class GoodsCategorys(models.Model):
+class GoodCategories(models.Model):
     """商品类别"""
     CATEGORY_CHOICE = (
         (1, '一级类目'),
@@ -34,7 +34,7 @@ class GoodsCategorys(models.Model):
 
 class Goods(models.Model):
     """商品"""
-    category = models.ForeignKey(GoodsCategorys, default='', on_delete=models.CASCADE, related_name='goods',
+    category = models.ForeignKey(GoodCategories, default='', on_delete=models.CASCADE, related_name='goods',
                                  verbose_name="商品类别")
     name = models.CharField(max_length=60, verbose_name="商品名称")
     goods_sn = models.CharField(max_length=50, verbose_name="商品唯一货号")
@@ -64,7 +64,7 @@ class Goods(models.Model):
         verbose_name_plural = verbose_name
 
 
-class GoodsImages(models.Model):
+class GoodImages(models.Model):
     """商品轮播图"""
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='images', verbose_name='商品')
     images = models.ImageField(upload_to='goods/images/carousel', verbose_name='商品图片')
