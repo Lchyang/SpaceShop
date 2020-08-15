@@ -38,6 +38,11 @@ class GoodsListView(APIView):
         if name:
             goods = goods.filter(name__contains=name)
 
+        # 排序
+        order_filed = request.query_params.get('order_filed', '')
+        if order_filed:
+            goods = goods.order_by(order_filed)
+
         # 获取商品列表自定义分页
         _paginator = PageNumberPagination()
         _paginator.page_size = 10

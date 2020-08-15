@@ -17,12 +17,14 @@ from django.urls import path
 from django.conf.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 sub_urlpatterns = [
     path('', include('goods.urls'), name='goods'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('xadmin/', xadmin.site.urls),
+    path('jwt-auth', obtain_jwt_token),
 
 ]
 
