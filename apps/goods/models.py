@@ -18,6 +18,7 @@ class GoodCategories(models.Model):
                                         related_name='sub_cat',
                                         verbose_name="父类别")
     category_type = models.IntegerField(choices=CATEGORY_CHOICE, verbose_name="商品类目级别")
+    is_tab = models.BooleanField(default=False, verbose_name="是否导航")
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
     modified_time = models.DateTimeField(verbose_name='修改时间')
 

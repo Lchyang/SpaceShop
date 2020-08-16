@@ -24,7 +24,7 @@ sub_urlpatterns = [
     path('', include('goods.urls'), name='goods'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('xadmin/', xadmin.site.urls),
-    path('jwt-auth', obtain_jwt_token),
+    path('jwt-login/', obtain_jwt_token),
 
 ]
 

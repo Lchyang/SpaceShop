@@ -39,7 +39,16 @@ class GoodCategoriesAdmin(object):
     list_display = ["name", "category_type", "parent_category"]
     list_filter = ["category_type", "parent_category", "name"]
     search_fields = ['name', 'category_type']
+    readonly_fields = ('created_time', 'modified_time')
+
+
+class GoodImagesAdmin(object):
+    list_display = ["goods", "images"]
+    # list_filter = ["category_type", "parent_category", "name"]
+    # search_fields = ['name', 'category_type']
+    readonly_fields = ('created_time', 'modified_time')
 
 
 xadmin.site.register(models.Goods, GoodsAdmin)
 xadmin.site.register(models.GoodCategories, GoodCategoriesAdmin)
+xadmin.site.register(models.GoodImages, GoodImagesAdmin)

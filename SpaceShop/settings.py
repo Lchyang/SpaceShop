@@ -32,8 +32,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# 跨域允许访问的端口
+CORS_ORIGIN_ALLOW_ALL = True
+
 # 继承AbstractUser 要设置此项
 AUTH_USER_MODEL = "users.UserProfile"
+
+AUTHENTICATION_BACKENDS = (
+    'users.views.CustomBackend',
+)
 
 # Application definition
 
@@ -44,16 +51,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'DjangoUeditor',
+    'DjangoUeditor',  # 富文本
     'rest_framework',
-    'drf_yasg',
+    'django_filters',
+    'corsheaders',  # 跨域
     'xadmin',
-    'crispy_forms',
+    'crispy_forms',  # xadmin 依赖
     'goods.apps.GoodsConfig',
     'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -136,10 +145,11 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# rest framework settings
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
