@@ -14,6 +14,8 @@ import os
 import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import datetime
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APPS_DIR = os.path.join(BASE_DIR, 'apps')
 EXTRA_APPS_DIR = os.path.join(BASE_DIR, 'extra_apps')
@@ -157,3 +159,11 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
 }
+
+JWT_AUTH = {
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
+YUNPIAN_APIKEY = "756f2d59ff694f7f8ea3ea027dd9492c"
+YUNPIAN_TEXT = "【李春杨】您的验证码是{}。如非本人操作，请忽略本短信"

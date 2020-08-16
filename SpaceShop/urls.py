@@ -22,6 +22,7 @@ import xadmin
 
 sub_urlpatterns = [
     path('', include('goods.urls'), name='goods'),
+    path('users/', include('users.urls'), name='users'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('xadmin/', xadmin.site.urls),
     path('jwt-login/', obtain_jwt_token),

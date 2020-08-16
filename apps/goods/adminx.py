@@ -44,8 +44,6 @@ class GoodCategoriesAdmin(object):
 
 class GoodImagesAdmin(object):
     list_display = ["goods", "images"]
-    # list_filter = ["category_type", "parent_category", "name"]
-    # search_fields = ['name', 'category_type']
     readonly_fields = ('created_time', 'modified_time')
 
 
