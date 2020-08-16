@@ -9,7 +9,7 @@ from rest_framework import mixins
 from rest_framework.response import Response
 
 from .models import VerifyCode
-from .serializers import VerifyMobileSerializer
+from .serializers import VerifyMobileSerializer, RegisterSerializer
 from .send_sms import YunPianSms
 from SpaceShop.settings import YUNPIAN_APIKEY, YUNPIAN_TEXT
 
@@ -58,3 +58,8 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
             return Response({'mobile': mobile, 'msg': res['msg']}, status=status.HTTP_201_CREATED)
         else:
             return Response({'mobile': mobile, 'msg': res['msg']}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+    queryset = User.objects.all()
+    serializer_class = RegisterSerializer
