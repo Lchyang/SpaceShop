@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets, status
 from rest_framework import mixins
 from rest_framework.response import Response
+from rest_framework_jwt.utils import jwt_payload_handler, jwt_encode_handler
 
 from .models import VerifyCode
 from .serializers import VerifyMobileSerializer, RegisterSerializer
@@ -69,6 +70,30 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
 class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     """
     注册用户，主要逻辑就是获取手机验证码后，验证当前手机号的验证码,合法后把user存入数据库, 主要逻辑在serializer
+
+    关于initial_data  validated_data data 的区别
+    反序列化：
+    initial_data 在调用.is_valid()之前
+    validated_data 在调用.is_valid()之后
+    validated_data 是验证成功之后的数据 失败则没有数据
+    序列化：
+    直接调用 data
     """
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
+
+    def create(self, request, *args, **kwargs):
+        """
+        因为注册的逻辑是注册之后就登录，所以需要把username token返回给前端
+        token 的生成逻辑可以参考rest_framework_jwt 源码
+        """
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.perform_create(serializer)
+        data = serializer.data
+        data['token'] = jwt_encode_handler(jwt_payload_handler(user))
+        headers = self.get_success_headers(serializer.data)
+        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        return serializer.save()
