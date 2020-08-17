@@ -49,12 +49,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     # style 密码输入为密文
     password = serializers.CharField(style={'input_type': 'password'}, label='密码', write_only=True)
 
+    '''
+    # 该功能可以用django signal 完成, 以被替代，留在这做参考
     def create(self, validated_data):
         # 因为是注册，必须先创建用户，返回用户实例,然后把密码保存成密文
         instance = super().create(validated_data)
         instance.set_password(validated_data['password'])
         instance.save()
         return instance
+    '''
 
     def validate_code(self, code):
         """
