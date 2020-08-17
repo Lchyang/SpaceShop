@@ -2,13 +2,21 @@ import requests
 import json
 
 
-class YunPianSms:
+class YunPianSms(object):
+    """
+    云片网发送信息.
+    """
 
     def __init__(self, api_key):
         self.api_key = api_key
         self.url = 'https://sms.yunpian.com/v2/sms/single_send.json'
 
     def send_sms(self, mobile, text):
+        """ 发送验证码信息.
+        :param mobile: str
+        :param text: str
+        :return: str
+        """
         params = {
             'apikey': self.api_key,
             'mobile': mobile,
