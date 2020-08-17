@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Goods, GoodCategories
+from .models import Goods
+from .models import GoodCategories
 
 
 class GoodsSerializer(serializers.ModelSerializer):

@@ -6,8 +6,10 @@ from rest_framework import viewsets
 from rest_framework import filters
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Goods, GoodCategories
-from .serializers import GoodsSerializer, GoodCategoriesSerializer
+from .models import GoodCategories
+from .models import Goods
+from .serializers import GoodCategoriesSerializer
+from .serializers import GoodsSerializer
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -18,11 +20,18 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 
 class GoodsFilter(django_filters.FilterSet):
+    """
+    基于django-filter的过滤函数
+    """
     pricemin = django_filters.NumberFilter(field_name="sales_price", lookup_expr='gte')
     pricemax = django_filters.NumberFilter(field_name="sales_price", lookup_expr='lte')
+    # method 方式，获取字段
     top_category = django_filters.NumberFilter(field_name='category', method='get_top_category')
 
     def get_top_category(self, queryset, name, value):
+        """
+        联合查询方式，过滤出一个子类下面的所有商品
+        """
         return queryset.filter(Q(category_id=value) | Q(category__parent_category_id=value) | Q(
             category__parent_category__parent_category_id=value))
 
@@ -32,6 +41,9 @@ class GoodsFilter(django_filters.FilterSet):
 
 
 class GoodsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    商品列表和详情
+    """
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = StandardResultsSetPagination
@@ -42,5 +54,8 @@ class GoodsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class CategoriesViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    商品分类列表和详情
+    """
     queryset = GoodCategories.objects.filter(category_type=1)
     serializer_class = GoodCategoriesSerializer
