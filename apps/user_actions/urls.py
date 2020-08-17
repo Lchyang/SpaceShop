@@ -5,7 +5,7 @@ from rest_framework.routers import DefaultRouter
 from user_actions import views
 
 router = DefaultRouter()
-router.register(r'favorite', views.UserFavViewSet)
+router.register(r'favorite', views.UserFavViewSet, basename='favorite')
 
 urlpatterns = [
     path('', include(router.urls)),
