@@ -1,5 +1,5 @@
 import xadmin
-from .models import VerifyCode, UserProfile
+from .models import VerifyCode
 
 
 class VerifyCodeAdmin(object):

@@ -13,9 +13,6 @@ class YunPianSms(object):
 
     def send_sms(self, mobile, text):
         """ 发送验证码信息.
-        :param mobile: str
-        :param text: str
-        :return: str
         """
         params = {
             'apikey': self.api_key,

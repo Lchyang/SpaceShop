@@ -11,6 +11,7 @@ User = get_user_model()
 
 
 class VerifyMobileSerializer(serializers.Serializer):
+    # TODO 发送短信验证手机号码逻辑
     mobile = serializers.CharField(max_length=11)
 
     def create(self, validated_data):
@@ -39,6 +40,7 @@ class VerifyMobileSerializer(serializers.Serializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    # TODO 注册逻辑
     # write_only 只有反向序列化的时候验证此字段， read_only 当正向序列化的时候验证此字段
     code = serializers.CharField(allow_null=True, allow_blank=True, max_length=4,
                                  min_length=4, label='验证码', write_only=True)

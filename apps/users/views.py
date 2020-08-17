@@ -3,6 +3,7 @@ import random
 from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from rest_framework import viewsets, status
 from rest_framework import mixins
@@ -12,7 +13,6 @@ from rest_framework_jwt.utils import jwt_payload_handler, jwt_encode_handler
 from .models import VerifyCode
 from .serializers import VerifyMobileSerializer, RegisterSerializer
 from .send_sms import YunPianSms
-from SpaceShop.settings import YUNPIAN_APIKEY, YUNPIAN_TEXT
 
 User = get_user_model()
 
@@ -23,6 +23,7 @@ class CustomBackend(ModelBackend):
     如果要自定义用户认证的话，要继承ModelBackend 然后重载authenticate这个方法
     """
 
+    # 希望当用户传入手机号，和username时都能验证通过，django默认的是使用username和email所以需要重载
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             # 当用户名传入的事username或者mobile都应该认证成功
@@ -37,6 +38,7 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     """
     注册之前要先发送验证码，到手机号，发送成功之后将验证码，手机号存入数据库
     """
+    # TODO 验证码逻辑
     queryset = VerifyCode.objects.all()
     serializer_class = VerifyMobileSerializer
 
@@ -55,8 +57,8 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
         mobile = serializer.validated_data.get('mobile', None)
         code = self.generator_code()
         # 拼接发送的短信
-        text = YUNPIAN_TEXT.format(code)
-        yun_pian = YunPianSms(YUNPIAN_APIKEY)
+        text = settings.YUNPIAN_TEXT.format(code)
+        yun_pian = YunPianSms(settings.YUNPIAN_APIKEY)
         # TODO 发送短信 应该使用celery
         res = yun_pian.send_sms(mobile=mobile, text=text)
         if res.get('code', None) == 0:
@@ -79,6 +81,7 @@ class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     序列化：
     直接调用 data
     """
+    # TODO 注册逻辑回头仔细看一下
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
