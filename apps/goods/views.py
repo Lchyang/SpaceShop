@@ -37,7 +37,7 @@ class GoodsFilter(django_filters.FilterSet):
 
     class Meta:
         model = Goods
-        fields = ['pricemin', 'pricemax', 'top_category']
+        fields = ['pricemin', 'pricemax', 'top_category','is_hot']
 
 
 class GoodsViewSet(viewsets.ReadOnlyModelViewSet):

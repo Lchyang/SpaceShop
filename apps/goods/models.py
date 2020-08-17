@@ -51,6 +51,9 @@ class Goods(models.Model):
                               filePath="goods/files/", default='')
     sold_nums = models.IntegerField(default=0, verbose_name="商品销量")
     stored_nums = models.IntegerField(default=0, verbose_name="商品库存数量")
+
+    is_hot = models.BooleanField(default=False, verbose_name='是否热销')
+    is_new = models.BooleanField(default=False, verbose_name='是否新品')
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
     modified_time = models.DateTimeField(verbose_name='修改时间')
 
@@ -70,7 +73,7 @@ class Goods(models.Model):
 class GoodImages(models.Model):
     """商品轮播图"""
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='images', verbose_name='商品')
-    images = models.ImageField(upload_to='goods/images/carousel', verbose_name='商品图片')
+    image = models.ImageField(upload_to='goods/images/carousel', verbose_name='商品图片')
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
     modified_time = models.DateTimeField(verbose_name='修改时间')
 
