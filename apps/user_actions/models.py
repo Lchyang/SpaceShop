@@ -19,4 +19,5 @@ class UserFav(models.Model):
     class Meta:
         verbose_name = '商户收藏商品'
         verbose_name_plural = verbose_name
+        # 收藏是基于用户的所以要构建联合唯一
         unique_together = ('user', 'good')

@@ -4,16 +4,22 @@ from django.db.models import Q
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth import get_user_model
 from django.conf import settings
+
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework_jwt.utils import jwt_payload_handler
 from rest_framework_jwt.utils import jwt_encode_handler
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+from .serializers import RegisterSerializer
+from .serializers import UserCenterSerializer
+from .serializers import VerifyMobileSerializer
 
 from .models import VerifyCode
-from .serializers import RegisterSerializer
-from .serializers import VerifyMobileSerializer
 from .send_sms import YunPianSms
 
 User = get_user_model()
@@ -92,6 +98,24 @@ class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
         因为注册的逻辑是注册之后就登录，所以需要把username token返回给前端
         token 的生成逻辑可以参考rest_framework_jwt 源码
         """
+
+        '''
+        如果把个人信息修改集成到这个类，可以使用动态的方式分配行为
+        def get_serializer_class(self):
+            if self.action == 'retrieve':
+                return UserDetailSerializer
+            elif self.action == 'create':
+                return UserRegSerializer
+            return UserDetailSerializer
+
+        def get_permissions(self):
+            if self.action == 'retrieve':
+                return [permissions.IsAuthenticated()]
+            elif self.action == 'create':
+                return []
+            return []
+        '''
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = self.perform_create(serializer)
@@ -102,3 +126,20 @@ class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
 
     def perform_create(self, serializer):
         return serializer.save()
+
+
+class UserCenterViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.UpdateModelMixin):
+    """
+    用户个人中心获取数据
+    """
+    serializer_class = UserCenterSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
+
+    def get_queryset(self):
+        s = self.request.user
+        return User.objects.filter(username=self.request.user.username)
+
+    def get_object(self):
+        """更新用户信息的时候传入id，但是id不起作用只是用于url格式"""
+        return self.request.user
