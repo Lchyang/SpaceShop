@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import UserFav
 from .serializers import UserFavSerializer
+from .serializers import UserFavListSerializer
+
 
 # TODO 看是否需要重构，解耦
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -25,7 +27,8 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
 class UserFavViewSet(viewsets.ModelViewSet):
     """
-    用户收藏
+    list:
+    用户收藏列表 因为列表要展示商品信息所以新建一个serializer比较合适
     """
     serializer_class = UserFavSerializer
     # 权限验证IsAuthenticated只验证是否登录，当执行删除操作的时候要验证删除的数据user是否是当前的user
@@ -34,6 +37,13 @@ class UserFavViewSet(viewsets.ModelViewSet):
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     # 用户收藏是在商品详情页面，当用户收藏的时候传入的是商品的id，所以查找用户收藏的表的时候用good_id,而不是pk
     lookup_field = 'good_id'
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return UserFavListSerializer
+        if self.action == 'retrieve':
+            return UserFavSerializer
+        return UserFavSerializer
 
     def get_queryset(self):
         """过滤当前用户的数据"""

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import UserFav
+from goods.models import Goods
 
 
 class UserFavSerializer(serializers.ModelSerializer):
@@ -12,3 +13,17 @@ class UserFavSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserFav
         fields = ('user', 'good', 'id')
+
+
+class FavGoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Goods
+        fields = ('sales_price', 'name', 'id')
+
+
+class UserFavListSerializer(serializers.ModelSerializer):
+    good = FavGoodSerializer()
+
+    class Meta:
+        model = UserFav
+        fields = ('good', 'id')
