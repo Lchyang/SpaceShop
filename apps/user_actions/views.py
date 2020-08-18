@@ -2,12 +2,10 @@ from rest_framework import viewsets, permissions
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import mixins
 
 from .models import UserFav
 from .serializers import UserFavSerializer
 from .serializers import UserFavListSerializer
-
 
 
 # TODO 看是否需要重构，解耦
@@ -27,8 +25,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class UserFavViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin,
-                     mixins.DestroyModelMixin):
+class UserFavViewSet(viewsets.ModelViewSet):
     """
     list:
     用户收藏列表 因为列表要展示商品信息所以新建一个serializer比较合适
