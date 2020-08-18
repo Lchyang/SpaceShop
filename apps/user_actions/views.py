@@ -4,8 +4,12 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from .models import UserFav
+from .models import UserLeaveMsg
+from .models import UserAddress
 from .serializers import UserFavSerializer
 from .serializers import UserFavListSerializer
+from .serializers import UserLeaveMsgSerializer
+from .serializers import UserAddressSerializer
 
 
 # TODO 看是否需要重构，解耦
@@ -48,3 +52,30 @@ class UserFavViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         """过滤当前用户的数据"""
         return UserFav.objects.filter(user=self.request.user)
+
+
+class UserLeaveMsgViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    retrieve:
+    update:
+    create:
+    """
+    serializer_class = UserLeaveMsgSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+    def get_queryset(self):
+        return UserLeaveMsg.objects.filter(user=self.request.user)
+
+
+class UserAddressViewSet(viewsets.ModelViewSet):
+    """
+    收货地址
+    """
+    serializer_class = UserAddressSerializer
+    permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
+    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+
+    def get_queryset(self):
+        return UserAddress.objects.filter(user=self.request.user)
