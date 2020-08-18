@@ -11,7 +11,7 @@ class UserProfile(AbstractUser):
     )
     name = models.CharField(max_length=30, blank=True, null=True, verbose_name='用户名')
     gender = models.IntegerField(choices=GENDER_CHOICE, default=1, verbose_name="性别")
-    birthday = models.DateTimeField(null=True, blank=True, verbose_name='出生日期')
+    birthday = models.DateField(null=True, blank=True, verbose_name='出生日期')
     mobile = models.CharField(max_length=11, null=True, blank=True, verbose_name="手机号")
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
     modified_time = models.DateTimeField(verbose_name='修改时间')

@@ -12,7 +12,7 @@ User = get_user_model()
 
 class VerifyMobileSerializer(serializers.Serializer):
     # TODO 发送短信验证手机号码逻辑
-    mobile = serializers.CharField(max_length=11)
+    mobile = serializers.CharField(max_length=11, help_text='手机号码')
 
     def create(self, validated_data):
         pass
@@ -43,13 +43,14 @@ class RegisterSerializer(serializers.ModelSerializer):
     # TODO 注册逻辑
     # write_only 只有反向序列化的时候验证此字段， read_only 当正向序列化的时候验证此字段
     code = serializers.CharField(allow_null=True, allow_blank=True, max_length=4,
-                                 min_length=4, label='验证码', write_only=True)
+                                 min_length=4, label='验证码', write_only=True, help_text='验证码 string')
     # UniqueValidator 对数据库里面unique=True的字段进行验证，message返回验证错误时的信息
-    username = serializers.CharField(max_length=11, min_length=11, label='用户名',
+    username = serializers.CharField(max_length=11, min_length=11, label='用户名', help_text='用户名 string',
                                      validators=[UniqueValidator(queryset=User.objects.all(),
                                                                  message='用户已经存在')])
     # style 密码输入为密文
-    password = serializers.CharField(style={'input_type': 'password'}, label='密码', write_only=True)
+    password = serializers.CharField(style={'input_type': 'password'}, label='密码', write_only=True,
+                                     help_text='密码 string')
 
     '''
     # 该功能可以用django signal 完成, 以被替代，留在这做参考
@@ -88,3 +89,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'code', 'password']
+
+
+class UserCenterSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'birthday', 'gender', 'mobile', 'email', 'name']
