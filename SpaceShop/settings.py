@@ -61,7 +61,8 @@ INSTALLED_APPS = [
     'crispy_forms',  # xadmin 依赖
     'goods.apps.GoodsConfig',
     'users.apps.UsersConfig',
-    'user_actions.apps.UserActionsConfig'
+    'user_actions.apps.UserActionsConfig',
+    'trades.apps.TradesConfig'
 ]
 
 MIDDLEWARE = [
