@@ -5,6 +5,12 @@ from goods.serializers import GoodsSerializer
 
 
 class ShoppingCartSerializer(serializers.Serializer):
+    """
+    购物车逻辑：
+    如果存在商品nums+1 如果不存在则创建
+    商品添加减少用update
+    """
+
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     goods = serializers.PrimaryKeyRelatedField(queryset=Goods.objects.all())
     nums = serializers.IntegerField(required=True, min_value=1, error_messages={
