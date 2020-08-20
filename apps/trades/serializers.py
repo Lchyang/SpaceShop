@@ -1,7 +1,11 @@
+import time
+
 from rest_framework import serializers
+
 from goods.models import Goods
-from .models import ShoppingCart
 from goods.serializers import GoodsSerializer
+from .models import ShoppingCart, Order, OrderGoods
+from random import Random
 
 
 class ShoppingCartSerializer(serializers.Serializer):
@@ -47,4 +51,48 @@ class ShoppingCartListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingCart
+        fields = '__all__'
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    order_sn = serializers.CharField(read_only=True)
+    paying_status = serializers.CharField(read_only=True)
+    trade_no = serializers.CharField(read_only=True)
+    pay_time = serializers.DateTimeField(read_only=True)
+    created_time = serializers.DateTimeField(read_only=True)
+
+    def generate_order_sn(self):
+        # 当前时间 + user.id + 两位随机数
+        local_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
+        user_id = self.context['request'].user.id
+        # 必须得这样实例化一下，不然每次更新操作的时候random会从新执行
+        random = Random()
+        random_int = random.randint(10, 99)
+        order_sn = "{}{}{}".format(local_time, user_id, random_int)
+
+        return order_sn
+
+    def validate(self, attrs):
+        attrs['order_sn'] = self.generate_order_sn()
+        return attrs
+
+    class Meta:
+        model = Order
+        fields = '__all__'
+
+
+class OrderGoodsSerializer(serializers.ModelSerializer):
+    goods = GoodsSerializer()
+
+    class Meta:
+        model = OrderGoods
+        fields = '__all__'
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    order_goods = OrderGoodsSerializer(many=True)
+
+    class Meta:
+        model = Order
         fields = '__all__'

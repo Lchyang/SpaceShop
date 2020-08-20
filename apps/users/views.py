@@ -137,7 +137,6 @@ class UserCenterViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.U
     authentication_classes = (SessionAuthentication, JSONWebTokenAuthentication)
 
     def get_queryset(self):
-        s = self.request.user
         return User.objects.filter(username=self.request.user.username)
 
     def get_object(self):
