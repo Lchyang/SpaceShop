@@ -59,7 +59,7 @@ class OrderSerializer(serializers.ModelSerializer):
     order_sn = serializers.CharField(read_only=True)
     paying_status = serializers.CharField(read_only=True)
     trade_no = serializers.CharField(read_only=True)
-    pay_time = serializers.DateTimeField(read_only=True)
+    pay_time = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
     created_time = serializers.DateTimeField(read_only=True)
 
     def generate_order_sn(self):

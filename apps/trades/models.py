@@ -42,7 +42,7 @@ class Order(models.Model):
     paying_status = models.CharField(max_length=30, default="paying", verbose_name="订单支付状态")
     trade_no = models.CharField(max_length=100, unique=True, null=True, blank=True, verbose_name="交易号")
     created_time = models.DateTimeField(default=datetime.now, verbose_name="添加时间")
-    post_script = models.CharField(max_length=200, verbose_name="订单留言")
+    post_script = models.CharField(max_length=200,null=True, blank=True, verbose_name="订单留言")
     order_mount = models.FloatField(default=0.0, verbose_name="订单金额")
     pay_time = models.DateTimeField(null=True, blank=True, verbose_name="支付时间")
     # 用户信息

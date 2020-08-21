@@ -51,4 +51,5 @@ class OrderViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.Create
             order_goods.order = order_instance
             order_goods.nums = shop_cart.nums
             order_goods.save()
+            shop_cart.delete()
         return order_instance
