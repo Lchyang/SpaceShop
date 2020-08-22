@@ -1,7 +1,7 @@
 from .base import *
 
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-DB_PASSWORD = os.environ['DJANGO_DB_PASSWORD ']
+SECRET_KEY = os.environ['SPACE_SHOP_SECRET_KEY']
+DB_PASSWORD = os.environ['SPACE_SHOP_DB_PASSWORD ']
 
 DATABASES = {
     'default': {
@@ -14,6 +14,6 @@ DATABASES = {
     }
 }
 
-YUNPIAN_APIKEY = os.environ['YUNPIAN_APIKEY']
+YUNPIAN_APIKEY = os.environ['SPACE_SHOP_YUNPIAN_APIKEY']
 YUNPIAN_TEXT = "【李春杨】您的验证码是{}。如非本人操作，请忽略本短信"
 
