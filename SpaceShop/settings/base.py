@@ -95,7 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SpaceShop.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -132,8 +131,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/static/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -154,4 +152,3 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
-
