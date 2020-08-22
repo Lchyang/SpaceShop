@@ -40,7 +40,7 @@ def deploy(c):
     with c.cd(project_root_path):
         c.run('/home/lichy/project/SpaceShop/.space_venv/bin/pip install -r requirements.txt')
         c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python manage_pro.py migrate')
-        c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python collectstatic --noinput')
+        c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python manage_pro.py collectstatic --noinput')
 
     # 重新启动应用
     with c.cd(supervisor_conf_path):
