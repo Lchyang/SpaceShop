@@ -27,7 +27,7 @@ def deploy(c):
 
     # 先停止应用
     with c.cd(supervisor_conf_path):
-        cmd = 'supervisorctl stop {}'.format(supervisor_program_name)
+        cmd = '~/.local/bin/supervisorctl stop {}'.format(supervisor_program_name)
         c.run(cmd)
 
     # 进入项目根目录，从 Git 拉取最新代码
@@ -39,10 +39,10 @@ def deploy(c):
     # 安装依赖，迁移数据库，收集静态文件
     with c.cd(project_root_path):
         c.run('/home/lichy/project/SpaceShop/.space_venv/bin/pip install -r requirements.txt')
-        c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python manage.py migrate')
+        c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python manage_pro.py migrate')
         c.run('/home/lichy/project/SpaceShop/.space_venv/bin/python collectstatic --noinput')
 
     # 重新启动应用
     with c.cd(supervisor_conf_path):
-        cmd = 'supervisorctl start {}'.format(supervisor_program_name)
+        cmd = '~/.local/bin/supervisorctl start {}'.format(supervisor_program_name)
         c.run(cmd)

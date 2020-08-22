@@ -7,7 +7,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'space_shop',
-        'HOST': '127.0.0.1',
+        'HOST': '81.70.37.90',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': DB_PASSWORD
