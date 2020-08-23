@@ -7,6 +7,7 @@ from trades import views
 router = DefaultRouter()
 router.register(r'shopcart', views.ShoppingCartViewSet, basename='shopcart')
 router.register(r'order', views.OrderViewSet, basename='order')
+router.register(r'alipay', views.OrderViewSet, basename='alipay')
 
 urlpatterns = [
     path('', include(router.urls)),

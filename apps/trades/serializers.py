@@ -1,9 +1,11 @@
 import time
 
 from rest_framework import serializers
+from django.conf import settings
 
 from goods.models import Goods
 from goods.serializers import GoodsSerializer
+from apps.utils.alipay import AliPay
 from .models import ShoppingCart, Order, OrderGoods
 from random import Random
 
@@ -61,6 +63,28 @@ class OrderSerializer(serializers.ModelSerializer):
     trade_no = serializers.CharField(read_only=True)
     pay_time = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
     created_time = serializers.DateTimeField(read_only=True)
+    ali_pay_url = serializers.SerializerMethodField(read_only=True)
+
+    # SerializerMethodField 通过函数构建字段，和下面generate_order_sn的区别，当使用obj时用SerializerMethodField.
+    @staticmethod
+    def get_ali_pay_url(obj):
+        alipay = AliPay(
+            appid=settings.APP_ID,
+            app_notify_url=settings.NOTIFY_URL,
+            app_private_key_path=settings.APP_PRIVATE_KEY_PATH,
+            alipay_public_key_path=settings.ALIPAY_PUBLIC_KEY_PATH,
+            # 支付宝的公钥，验证支付宝回传消息使用，不是你自己的公钥,
+            debug=True,  # 默认False,
+            return_url=settings.RETURN_URL
+        )
+
+        url = alipay.direct_pay(
+            subject=obj.order_sn,
+            out_trade_no=obj.order_sn,
+            total_amount=obj.order_mount,
+        )
+        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(data=url)
+        return re_url
 
     def generate_order_sn(self):
         # 当前时间 + user.id + 两位随机数

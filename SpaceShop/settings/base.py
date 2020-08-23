@@ -152,3 +152,13 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
+
+
+# alipay
+APP_PRIVATE_KEY_PATH = os.path.join(BASE_DIR, "apps/trades/keys/private_2048.txt")
+ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, "apps/trades/keys/alipay_2048_key.txt")
+
+RETURN_URL = "http://81.70.37.90:8081/alipay/return"
+NOTIFY_URL = "http://81.70.37.90:8081/alipay/return"
+
+APP_ID = "2016102600761595"
