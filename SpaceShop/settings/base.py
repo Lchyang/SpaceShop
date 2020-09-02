@@ -41,6 +41,8 @@ AUTH_USER_MODEL = "users.UserProfile"
 
 AUTHENTICATION_BACKENDS = (
     'users.views.CustomBackend',
+    'social_core.backends.weibo.WeiboOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 # Application definition
@@ -61,7 +63,8 @@ INSTALLED_APPS = [
     'goods.apps.GoodsConfig',
     'users.apps.UsersConfig',
     'user_actions.apps.UserActionsConfig',
-    'trades.apps.TradesConfig'
+    'trades.apps.TradesConfig',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +91,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -153,7 +158,6 @@ JWT_AUTH = {
     'JWT_AUTH_HEADER_PREFIX': 'JWT',
 }
 
-
 # alipay
 APP_PRIVATE_KEY_PATH = os.path.join(BASE_DIR, "apps/trades/keys/private_2048.txt")
 ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, "apps/trades/keys/alipay_2048_key.txt")
@@ -169,3 +173,11 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+
+
+# weibo login
+SOCIAL_AUTH_WEIBO_KEY = '2361548814'
+SOCIAL_AUTH_WEIBO_SECRET = 'fe444d98d5457bad5ddab085c7f2f5e6'
+
+# 登录后跳转到页面的url
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:8080/#/app/home/index'

@@ -33,13 +33,17 @@ class CustomBackend(ModelBackend):
 
     # 希望当用户传入手机号，和username时都能验证通过，django默认的是使用username和email所以需要重载
     def authenticate(self, request, username=None, password=None, **kwargs):
+        if username is None:
+            username = kwargs.get(User.USERNAME_FIELD)
         try:
-            # 当用户名传入的事username或者mobile都应该认证成功
-            user = User.objects.get(Q(username=username) | Q(mobile=username))
-            if user.check_password(password):
+            user = User._default_manager.get_by_natural_key(Q(username=username) | Q(mobile=username))
+        except User.DoesNotExist:
+            # Run the default password hasher once to reduce the timing
+            # difference between an existing and a nonexistent user (#20760).
+            User().set_password(password)
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
                 return user
-        except NotImplementedError or Exception:
-            return None
 
 
 class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):

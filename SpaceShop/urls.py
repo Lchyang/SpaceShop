@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path
-from django.conf.urls import include
+from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.documentation import include_docs_urls
@@ -22,7 +22,7 @@ from rest_framework_jwt.views import obtain_jwt_token
 import xadmin
 
 sub_urlpatterns = [
-    path('goods/', include('goods.urls'), name ='goods'),
+    path('goods/', include('goods.urls'), name='goods'),
     path('users/', include('users.urls'), name='users'),
     path('actions/', include('user_actions.urls'), name='actions'),
     path('trades/', include('trades.urls'), name='trades'),
@@ -30,6 +30,8 @@ sub_urlpatterns = [
     path('xadmin/', xadmin.site.urls),
     path('jwt-login/', obtain_jwt_token),
     path('docs/', include_docs_urls(title='SpaceShop')),
+    url('', include('social_django.urls', namespace='social'))
+
 ]
 
 # 静态文件配置，debug=True时才能生效
