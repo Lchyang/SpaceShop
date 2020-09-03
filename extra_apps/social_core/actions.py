@@ -3,9 +3,6 @@ from six.moves.urllib_parse import quote
 from .utils import sanitize_redirect, user_is_authenticated, \
     user_is_active, partial_pipeline_data, setting_url
 
-from rest_framework_jwt.utils import jwt_payload_handler
-from rest_framework_jwt.utils import jwt_encode_handler
-from rest_framework.response import Response
 
 def do_auth(backend, redirect_name='next'):
     # Save any defined next value into session
@@ -102,11 +99,7 @@ def do_complete(backend, login, user=None, redirect_name='next',
                         [backend.strategy.request_host()]
         url = sanitize_redirect(allowed_hosts, url) or \
               backend.setting('LOGIN_REDIRECT_URL')
-    response = backend.strategy.redirect(url)
-    data = {}
-    data['name'] = user.name if user.name else user.username
-    data['token'] = jwt_encode_handler(jwt_payload_handler(user))
-    return Response(data)
+    return backend.strategy.redirect(url)
 
 
 def do_disconnect(backend, user, association_id=None, redirect_name='next',
