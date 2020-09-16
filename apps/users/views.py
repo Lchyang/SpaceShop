@@ -20,7 +20,7 @@ from .serializers import UserCenterSerializer
 from .serializers import VerifyMobileSerializer
 
 from .models import VerifyCode
-from .send_sms import YunPianSms
+from .tasks import send_sms_task
 
 User = get_user_model()
 
@@ -46,7 +46,7 @@ class CustomBackend(ModelBackend):
                 return user
 
 
-class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
+class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.ListModelMixin):
     """
     注册之前要先发送验证码，到手机号，发送成功之后将验证码，手机号存入数据库
     """
@@ -63,6 +63,17 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
             code += random.choice(seeds)
         return code
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -70,15 +81,19 @@ class VerifyMobileViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
         code = self.generator_code()
         # 拼接发送的短信
         text = settings.YUNPIAN_TEXT.format(code)
-        yun_pian = YunPianSms(settings.YUNPIAN_APIKEY)
+        # yun_pian = YunPianSms(settings.YUNPIAN_APIKEY)
         # TODO 发送短信 应该使用celery
-        res = yun_pian.send_sms(mobile=mobile, text=text)
-        if res.get('code', None) == 0:
-            verify_instance = VerifyCode(code=code, mobile=mobile)
-            verify_instance.save()
-            return Response({'mobile': mobile, 'msg': res['msg']}, status=status.HTTP_201_CREATED)
+        res = send_sms_task.delay(mobile=mobile, text=text)
+        if res.ready():
+            return Response({'mobile': 'success'}, status=status.HTTP_201_CREATED)
         else:
-            return Response({'mobile': mobile, 'msg': res['msg']}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'mobile': '正在发送'}, status=status.HTTP_201_CREATED)
+
+        # if res.get('code', None) == 0:
+        #     verify_instance = VerifyCode(code=code, mobile=mobile)
+        #     verify_instance.save()
+        # else:
+        #     return Response({'mobile': mobile, 'msg': res['msg']}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RegisterViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
