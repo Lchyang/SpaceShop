@@ -5,6 +5,7 @@ from django_filters import rest_framework as django_filters
 from rest_framework import viewsets
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
 
 from .models import GoodCategories
 from .models import Goods
@@ -51,7 +52,7 @@ class GoodsOrding(OrderingFilter):
     ordering_description = '排序内容'
 
 
-class GoodsViewSet(viewsets.ReadOnlyModelViewSet):
+class GoodsViewSet(CacheResponseMixin, viewsets.ReadOnlyModelViewSet):
     """
     商品列表和详情
     """

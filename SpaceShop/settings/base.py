@@ -174,10 +174,25 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
-
 # weibo login
 SOCIAL_AUTH_WEIBO_KEY = '2361548814'
 SOCIAL_AUTH_WEIBO_SECRET = 'fe444d98d5457bad5ddab085c7f2f5e6'
 
 # 登录后跳转到页面的url
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:8080/#/app/home/index'
+
+# drf extensions 缓存失效时间
+REST_FRAMEWORK_EXTENSIONS = {
+    'DEFAULT_CACHE_RESPONSE_TIMEOUT': 60 * 15
+}
+
+# 配置redis 缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
